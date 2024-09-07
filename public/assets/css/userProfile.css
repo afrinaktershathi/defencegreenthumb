@@ -1,0 +1,32 @@
+#profileWrapper {
+    min-height: 80vh;
+    height: 800px;
+}
+
+.profileContainer {
+    height: 80%;
+    min-height: 500px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.profileMenu {
+    padding: 60px 0;
+    border-right: 1px solid #ccc;
+    height: 100%;
+}
+.profileMenu a {
+    display: block;
+    padding: 20px 40px;
+    color: #888;
+    position: relative;
+}
+.profileMenu li.active a,
+.profileMenu a:hover {
+    background-color: var(--primaryColor);
+    color: white;
+}
+
+
+.profileContent{
+    padding: 20px;
+}
