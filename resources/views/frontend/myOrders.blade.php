@@ -44,15 +44,17 @@
         <td>{{ $order->qty }}</td>
         <td>
             <span
-                class="btn btn-{{ $order->status == 'Processing' || $order->status == 'Complete' ? 'primary' : 'danger' }} btn-sm">
+                class="btn btn-{{ $order->status == 'Processing' || $order->status == 'Complete' ? 'primary' : ($order->status == 'Pending' ? 'danger':'success') }} btn-sm">
                 @if ($order->status == 'Processing' || $order->status == 'Complete')
                 Payment Complete
-                @else
+                @elseif ($order->status == 'Pending')
                 Payment Pending
+                @else
+                {{ $order->status  }}
                 @endif
             </span>
         </td>
-      
+
     </tr>
     @endforeach
 </table>

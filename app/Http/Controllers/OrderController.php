@@ -53,25 +53,41 @@ class OrderController extends Controller
     }
 
 
-    function sendOTP()
+    function sendOTP($phone)
     {
-        $receiverNumber = '+880 1997 492233'; // Replace with the recipient's phone number
-        $message = 'your order hasbeen placed'; // Replace with your desired message
 
-        $sid = env('TWILIO_SID');
-        $token = env('TWILIO_TOKEN');
-        $fromNumber = env('TWILIO_FROM');
+        $url = "http://bulksmsbd.net/api/smsapi";
+        $api_key = "MFyeAekV5m2fofdpgFFq";
+        $senderid = "8809617620259";
+        $number = $phone;
+        $opt = fake()->randomNumber(5);
+        $message = "Your OPT code is " . $opt;
+        session(['otp' => $opt]);
 
-        try {
-            $client = new Client($sid, $token);
-            $client->messages->create($receiverNumber, [
-                'from' => $fromNumber,
-                'body' => $message
-            ]);
 
-            return 'SMS Sent Successfully.';
-        } catch (Exception $e) {
-            return 'Error: ' . $e->getMessage();
-        }
+        $data = [
+            "api_key" => $api_key,
+            "senderid" => $senderid,
+            "number" => $number,
+            "message" => $message
+        ];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        // return $response;
+        return back();
+    }
+
+    function markAsDelivered($id)
+    {
+        $order = Order::findOrFail($id);
+        $order->status = "Delivered";
+        $order->save();
+        return back();
     }
 }

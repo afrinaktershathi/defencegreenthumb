@@ -36,7 +36,7 @@ Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('myOrders')
 //* ORDER LIST
 Route::get('/deliver-orders', [OrderController::class, 'orderLists'])->name('order.delivery.lists');
 Route::get('/deliver-orders-confirm/{id}', [OrderController::class, 'deliveryConfirm'])->name('order.delivery.confirm');
-Route::get('/send-otp', [OrderController::class, 'sendOtp'])->name('order.delivery.otp');
-
+Route::get('/send-otp/{phone}', [OrderController::class, 'sendOtp'])->name('order.delivery.otp');
+Route::get('/mark-delivered/{id}', [OrderController::class,'markAsDelivered'])->name('order.delivery.mark');
 
 Auth::routes();

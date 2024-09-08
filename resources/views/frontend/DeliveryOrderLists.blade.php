@@ -44,15 +44,26 @@
         <td>{{ $order->qty }}</td>
         <td>
             <div class="text-center ">
+                {{-- {{ dd(session()->has('opt')) }} --}}
+
+
+
                 @if ($order->status != 'Delivering')
                 <a href="{{ route('order.delivery.confirm', $order->id) }}" class="btn btn-sm btn-dark ">Take
                     Delivery</a>
-                @else
-                <a href="{{ route('order.delivery.otp') }}" class="btn btn-sm btn-dark mb-2">Send
-                    OPT</a>
-                <a href="{{ route('order.delivery.confirm', $order->id) }}" class="btn btn-sm btn-dark mb-2">Mark as
-                    Delivered</a>
 
+                @else
+                @if ($order->delivery_id == auth()->id())
+                <a href="{{ route('order.delivery.otp', $order->phone) }}" class="btn btn-sm btn-dark mb-2">Send
+                    OPT</a>
+
+                <a href="{{ route('order.delivery.mark', $order->id) }}" class="btn btn-sm btn-dark mb-2">Mark as
+                    Delivered</a>
+                @endif
+
+                @if (session()->has('otp'))
+                <p>Your OTP is {{ session('otp') }}</p>
+                @endif
                 @endif
             </div>
         </td>
