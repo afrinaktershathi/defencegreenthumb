@@ -1,5 +1,6 @@
 @extends('layout.UserProfileLayout')
 @section('userProfile')
+@if (auth()->user()->status != 0)
 <h2>Delivery Lists</h2>
 
 <table class="table table-responsive">
@@ -71,4 +72,7 @@
     </tr>
     @endforeach
 </table>
+@else
+<h4 class="text-center mt-5">Please wait for  <span class="text-success">Administration Permission</span></h4>
+@endif
 @endsection

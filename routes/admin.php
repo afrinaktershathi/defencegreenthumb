@@ -16,7 +16,8 @@ Route::prefix('admin/')->group(function () {
 
     //* backend
     Route::get('/dashboard', [BackendController::class, 'dashboard'])->name('dashboard');
-
+    Route::get('/employee-approve/{id}', [BackendController::class,'approve'])->name('employee.approve');
+    Route::get('/employee-denied/{id}', [BackendController::class, 'denied'])->name('employee.denied');
     //products routes
     Route::get('/products', [ProductController::class, 'products'])->name('products.show');
     Route::get('/products/edit/{id}', [ProductController::class, 'editProducts'])->name('products.edit');
@@ -37,6 +38,7 @@ Route::prefix('admin/')->group(function () {
     Route::get('/orders', [OrderController::class, 'orders'])->name('orders.show');
     Route::get('/mark-complete/{id}', [OrderController::class,'ordersComplete'])->name('order.complete');
     Route::get('/mark-cancel/{id}', [OrderController::class,'orderCancel'])->name('order.cancel');
+
 
 
 });
