@@ -46,11 +46,7 @@
                         <td>{{ $cart->id }}</td>
                         <td>{{ $cart->products->name }} ({{ $cart->products->price }} tk)</td>
                         <td>
-                            {{-- <div class="btn-group" style="width: 100px">
-                                <button style="background: #7C9087; width:30px; color:#fff;" class="inc btn btn-sm counter_btn">+</button>
-                                <input  class="input form-control text-center" type="text" placeholder="1" value="{{ $cart->qty }}">
-                                <button style="background: #7C9087; width:30px; color:#fff;" class="dec btn btn-sm counter_btn" >-</button>
-                            </div> --}}
+                           
 
 
 
@@ -64,6 +60,10 @@
                                 <button type="button" data-id="#foodQuantity{{ $cart->id }}"
                                     class="btn btn-sm btn-primary counter_btn" data-type="inc">+</button>
                             </div>
+
+                            @if (session()->has('msg'))
+                                <p class="text-danger">{{ session('msg') }}</p>
+                            @endif
                         </td>
                         <td>{{ $cart->products->price * $cart->qty }}</td>
                         <td>

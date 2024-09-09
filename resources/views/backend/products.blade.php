@@ -84,11 +84,22 @@
               </select>
             </div>
             <div class="my-2">
-              <select name="stock" class="form-control" style="width:100% " >
-                  <option {{ $editedProducts->stock == 1 ? 'selected' : '' }} value="{{ true }}">In Stock</option>
-                  <option {{ $editedProducts->stock == 0 ? 'selected' : '' }}  value="{{ false }}">Out of Stock</option>
+              <select name="stock" class="form-control" style="width:100% ">
+                <option {{ isset($editedProducts) ? ($editedProducts?->stock ? 'selected' : '') : '' }} value="{{ true
+                  }}">In Stock</option>
+                <option {{ isset($editedProducts) ? ($editedProducts?->stock != true ? 'selected' : '') : '' }}
+                  value="{{ false }}">Out of Stock</option>
               </select>
             </div>
+
+            <div class="my-2">
+              <input type="number" value="{{ $editedProducts?->stocks->stock }}" name="qty" class="form-control" placeholder ="Stock Amount">
+            </div>
+            <div class="my-2">
+              <input type="number" value="{{ $editedProducts?->stocks->threshold }}" name="threshold" class="form-control" placeholder ="Stock Alert Amount">
+            </div>
+
+
             <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
           </form>
         </div>

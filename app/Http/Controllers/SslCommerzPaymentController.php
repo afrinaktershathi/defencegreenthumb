@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Library\SslCommerz\SslCommerzNotification;
+use App\Models\Stock;
 
 class SslCommerzPaymentController extends Controller
 {
@@ -638,7 +639,7 @@ class SslCommerzPaymentController extends Controller
 
   public function success(Request $request)
   {
-      
+
 
     $tran_id = $request->input('tran_id');
     $amount = $request->input('amount');
@@ -648,15 +649,15 @@ class SslCommerzPaymentController extends Controller
 
     $authUser = auth()->user();
 
-    if(auth()->user()){
 
-      $carts = Cart::where('user_id', auth()->user()->id)->get();
-      foreach ($carts as $cart) {
-        $cart->delete();
-      }
-      
+    $carts = Cart::where('user_id', $authUser->id)->get();
+    foreach ($carts as $cart) {
+      $stock = Stock::where('product_id', $cart->product_id)->decrement('stock', $cart->qty);
+
+      $cart->delete();
     }
-    
+
+
 
     $sslc = new SslCommerzNotification();
 

@@ -4,37 +4,39 @@ namespace App\Http\Controllers;
 
 use auth;
 use App\Models\Cart;
+use App\Models\Stock;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
-    function home() {
+    function home()
+    {
         $products = Product::latest()->take(12)->get();
-        $featuredProducts = $products->where('featured',true);
+        $featuredProducts = $products->where('featured', true);
 
         // dd($products);
-        
+
         return view('homepage', compact('featuredProducts', 'products'));
     }
 
 
-    function addToCart($id) {
+    function addToCart($id)
+    {
 
         $isExists = Cart::where('user_id', auth()->id())->where('product_id', $id)->exists();
 
-        if($isExists){
+        if ($isExists) {
             $cart = Cart::where('product_id', $id)->where('user_id', auth()->id())->first();
             $cart->qty += 1;
             $cart->save();
-        } else{
+        } else {
             $cart = new Cart();
             $cart->user_id = auth()->id();
             $cart->product_id = $id;
             $cart->qty = 1;
             $cart->save();
-            
         }
 
 
@@ -49,8 +51,9 @@ class MainController extends Controller
     // }
 
 
-    function productShow($id) {
-        $product = Product::with('categories:id')->findOrFail($id);
+    function productShow($id)
+    {
+        $product = Product::with(['categories:id', 'stocks'])->findOrFail($id);
         $categorIds = $product->categories->pluck('id');
 
 
@@ -59,7 +62,7 @@ class MainController extends Controller
         })->get();
 
 
-        return view('frontend.productview', compact('product','filteredProducts'));
+        return view('frontend.productview', compact('product', 'filteredProducts'));
     }
 
 
@@ -79,43 +82,50 @@ class MainController extends Controller
     }
 
 
-    function categoryArcheive($id) {
-        $products = Product::whereHas('categories', function($query) use ($id){
+    function categoryArcheive($id)
+    {
+        $products = Product::whereHas('categories', function ($query) use ($id) {
             $query->where('category_id', $id);
         })->get();
-        $category  = Category::find($id,['id','title']);
-        return view('frontend.CategoryArcheive', compact('products', 'category'));   
-        
+        $category  = Category::find($id, ['id', 'title']);
+        return view('frontend.CategoryArcheive', compact('products', 'category'));
     }
 
 
 
-    public function cartDetails(){
-        $cartDetails = Cart::where('user_id', auth()->user()->id)->
-         with('products')->get();
+    public function cartDetails()
+    {
+        $cartDetails = Cart::where('user_id', auth()->user()->id)->with('products')->get();
 
 
         // dd($cartDetails);
-        return view('frontend.cartDetails',compact('cartDetails'));  
-    
+        return view('frontend.cartDetails', compact('cartDetails'));
     }
 
 
 
-    public function cartDetailsUpdate(Request $request){
-        foreach($request->qty as $key=>$cartItem){
+    public function cartDetailsUpdate(Request $request)
+    {
+
+        foreach ($request->qty as $key => $cartItem) {
             $cart = Cart::find($key);
-            $cart->qty = $cartItem;
-            $cart->save();
+            $products = Stock::where('product_id', $cart->product_id)->first();
+            // dd($cartItem);
+            if ($cartItem <= $products->stock) {
+                $cart->qty = $cartItem;
+                $cart->save();
+            } else {
+                return back()->with('msg','Low on stock, Please order later!');
+            }
         }
         return back();
-    //  dd($request->all());
+        //  dd($request->all());
     }
 
 
-    public function cartDetailsDelete($id){
+    public function cartDetailsDelete($id)
+    {
         $cart = Cart::find($id)->delete();
         return back();
     }
-
 }

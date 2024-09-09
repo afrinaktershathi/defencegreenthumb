@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\Stock;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -13,6 +14,7 @@ class ProductController extends Controller
         $products = Product::with("categories")->latest()->get();
         $categories = Category::get();
         $editedProducts = null;
+
         return view('backend.products', compact('products', 'categories', 'editedProducts'));
     }
     function editProducts($id)
@@ -21,10 +23,10 @@ class ProductController extends Controller
         $products = Product::latest()->get();
         if ($id) {
 
-            $editedProducts = Product::with('categories:id')->find($id);
+            $editedProducts = Product::with(['categories:id', 'stocks'])->find($id);
         }
         $categories = Category::get();
-
+        
         return view('backend.products', compact('products', 'editedProducts', 'categories'));
     }
     function deleteProducts($id)
@@ -35,7 +37,7 @@ class ProductController extends Controller
 
     function saveProducts(Request $req, $id = null)
     {
-        // dd($req->all());
+
 
         $req->validate([
             'name' => 'required|unique:products,name,' . $id,
@@ -43,7 +45,7 @@ class ProductController extends Controller
             'details' => 'required'
         ]);
 
-      
+
         $products = Product::findOrNew($id);
         $products->name = $req->name;
         $products->price = $req->price;
@@ -54,6 +56,19 @@ class ProductController extends Controller
         }
         $products->stock = $req->stock == 1 ? true : false;
         $products->save();
+        if ($req->qty) {
+
+
+            Stock::updateOrCreate([
+                'product_id' => $products->id
+            ], [
+                'product_id' => $products->id,
+                'stock' => $req->qty,
+                'threshold' => $req->threshold
+            ]);
+        }
+
+
         $products->categories()->sync($req->categories);
         return back();
     }
