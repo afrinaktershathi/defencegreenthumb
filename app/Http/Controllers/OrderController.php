@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Order;
 use Twilio\Rest\Client;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
@@ -52,6 +53,14 @@ class OrderController extends Controller
         return back();
     }
 
+    function downloadInvoice($id) {
+        $order = Order::with('orderItems.products')->where('id', $id)->first();
+        // dd($order);
+        $data = compact('order');
+        $pdf = Pdf::loadView('invoice.PurchaseInvocie', $data);
+        return $pdf->download('invoice.pdf');
+
+    }
 
     function sendOTP($phone)
     {

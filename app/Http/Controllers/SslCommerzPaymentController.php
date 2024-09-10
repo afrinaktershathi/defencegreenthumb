@@ -569,6 +569,7 @@ class SslCommerzPaymentController extends Controller
     $post_data['country'] = "Bangladesh";
     $post_data['cus_phone'] = $request->customer_mobile;
     $post_data['cus_fax'] = "";
+    $post_data['prefer_date'] = $request->prefer_date;
     $post_data['zip'] = $request->post_code;
 
     # SHIPMENT INFORMATION
@@ -598,6 +599,7 @@ class SslCommerzPaymentController extends Controller
       ],
       [
         'name' => $post_data['name'],
+        'prefer_date' => $post_data['prefer_date'],
         'email' => $post_data['cus_email'],
         'phone' => $post_data['cus_phone'],
         'total_price' => $post_data['total_amount'],
@@ -649,12 +651,13 @@ class SslCommerzPaymentController extends Controller
 
     $authUser = auth()->user();
 
+    if ($authUser) {
+      $carts = Cart::where('user_id', $authUser->id)->get();
+      foreach ($carts as $cart) {
+        $stock = Stock::where('product_id', $cart->product_id)->decrement('stock', $cart->qty);
 
-    $carts = Cart::where('user_id', $authUser->id)->get();
-    foreach ($carts as $cart) {
-      $stock = Stock::where('product_id', $cart->product_id)->decrement('stock', $cart->qty);
-
-      $cart->delete();
+        $cart->delete();
+      }
     }
 
 
@@ -664,7 +667,7 @@ class SslCommerzPaymentController extends Controller
     #Check order status in order tabel against the transaction id or order id.
     $order_details = DB::table('orders')
       ->where('transaction_id', $tran_id)
-      ->select('transaction_id', 'status', 'currency', 'total_price')->first();
+      ->select('transaction_id', 'status', 'currency', 'total_price', 'id')->first();
 
     if ($order_details->status == 'Pending') {
       $validation = $sslc->orderValidate($request->all(), $tran_id, $amount, $currency);
@@ -682,9 +685,11 @@ class SslCommerzPaymentController extends Controller
         echo "<br >Transaction is successfully Completed";
       }
     } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
+      if($authUser){
+        Auth::login($authUser);
 
-      Auth::login($authUser);
-      return to_route('order.success');
+      }
+      return to_route('order.success', ['id' => $order_details->id]);
 
       /*
              That means through IPN Order status already updated. Now you can just show the customer that transaction is completed. No need to udate database.

@@ -12,7 +12,7 @@
 
                 <div class="details mt-3">
                     <p>{{ $product->detials }}</p>
-                    @if ( $product?->stocks->stock > 0)
+                    @if ( $product?->stocks?->stock > 0)
 
                     <div class="btn-group">
                         <a class="btn btn-primary mt-3" href="{{ route('cart.add', $product->id) }}">Add to Cart</a>

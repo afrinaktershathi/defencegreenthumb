@@ -93,10 +93,10 @@
             </div>
 
             <div class="my-2">
-              <input type="number" value="{{ $editedProducts?->stocks->stock }}" name="qty" class="form-control" placeholder ="Stock Amount">
+              <input type="number" value="{{ $editedProducts?->stocks?->stock }}" name="qty" class="form-control" placeholder ="Stock Amount">
             </div>
             <div class="my-2">
-              <input type="number" value="{{ $editedProducts?->stocks->threshold }}" name="threshold" class="form-control" placeholder ="Stock Alert Amount">
+              <input type="number" value="{{ $editedProducts?->stocks?->threshold }}" name="threshold" class="form-control" placeholder ="Stock Alert Amount">
             </div>
 
 

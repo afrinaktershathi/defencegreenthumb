@@ -23,6 +23,7 @@ Route::get('/add-to-cart/{id}', [MainController::class, 'addToCart'])->name('car
 Route::get('/cart-details', [MainController::class, 'cartDetails'])->name('cart.details')->middleware('auth');
 Route::put('/cart-details-update', [MainController::class, 'cartDetailsUpdate'])->name('cart.details.update')->middleware('auth');
 Route::get('/cart-details-delete/{id}', [MainController::class, 'cartDetailsDelete'])->name('cart.details.delete')->middleware('auth');
+
 Route::get('/order-success', function () {
     return view('frontend.success');
 })->name('order.success');
@@ -37,6 +38,6 @@ Route::get('/my-orders', [OrderController::class, 'myOrders'])->name('myOrders')
 Route::get('/deliver-orders', [OrderController::class, 'orderLists'])->name('order.delivery.lists');
 Route::get('/deliver-orders-confirm/{id}', [OrderController::class, 'deliveryConfirm'])->name('order.delivery.confirm');
 Route::get('/send-otp/{phone}', [OrderController::class, 'sendOtp'])->name('order.delivery.otp');
-Route::get('/mark-delivered/{id}', [OrderController::class,'markAsDelivered'])->name('order.delivery.mark');
-
+Route::get('/mark-delivered/{id}', [OrderController::class, 'markAsDelivered'])->name('order.delivery.mark');
+Route::get('/download-invoice/{id}', [OrderController::class, 'downloadInvoice'])->name('order.invoice.download');
 Auth::routes();

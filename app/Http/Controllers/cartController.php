@@ -11,9 +11,10 @@ class CartController extends Controller
 {
     function addToCart($id)
     {
-        $isExists = Cart::where(['product_id' => $id, 'customer_id' => auth('customer')->user()->id])->exists();
+        $isExists = Cart::where(['product_id' => $id, 'customer_id' => auth('customer')->user()->id])->first();
+
         $products = Stock::where('product_id', $id)->first();
-        if ($products->stock > 0) {
+        if ($products->stock > 0 && $isExists->qty < $products->stock) {
             if ($isExists) {
                 $cart = Cart::where(['product_id' => $id, 'customer_id' => auth('customer')->user()->id])->first();
                 $cart->qty = $cart->qty + 1;

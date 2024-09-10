@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Stock;
 use Illuminate\Http\Request;
 
 class BackendController extends Controller
@@ -13,7 +14,11 @@ class BackendController extends Controller
             $q->where('name', 'delivery-man');
         })->get();
 
-        return view('backend.dashboard', compact('users'));
+        $products = Stock::with('product:id,name')->where(function($q){
+            $q->whereColumn('stock', '<=', 'threshold');
+        })->get();
+        
+        return view('backend.dashboard', compact('users','products'));
     }
 
     function approve($id)
@@ -31,3 +36,4 @@ class BackendController extends Controller
         return back();
     }
 }
+

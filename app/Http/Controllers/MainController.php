@@ -25,17 +25,34 @@ class MainController extends Controller
     function addToCart($id)
     {
 
-        $isExists = Cart::where('user_id', auth()->id())->where('product_id', $id)->exists();
+        // $isExists = Cart::where('user_id', auth()->id())->where('product_id', $id)->exists();
 
+        // if ($isExists) {
+        //     $cart = Cart::where('product_id', $id)->where('user_id', auth()->id())->first();
+        //     $cart->qty += 1;
+        //     $cart->save();
+        // } else {
+        //     $cart = new Cart();
+        //     $cart->user_id = auth()->id();
+        //     $cart->product_id = $id;
+        //     $cart->qty = 1;
+        //     $cart->save();
+        // }
+
+        $isExists = Cart::where(['product_id' => $id, 'user_id' => auth()->user()->id])->first();
+
+        $products = Stock::where('product_id', $id)->first();
         if ($isExists) {
-            $cart = Cart::where('product_id', $id)->where('user_id', auth()->id())->first();
-            $cart->qty += 1;
-            $cart->save();
+            if ($products->stock > 0 && $isExists->qty < $products->stock) {
+                $cart = Cart::where(['product_id' => $id, 'user_id' => auth()->user()->id])->first();
+                $cart->qty = $cart->qty + 1;
+                $cart->save();
+            }
         } else {
             $cart = new Cart();
-            $cart->user_id = auth()->id();
-            $cart->product_id = $id;
             $cart->qty = 1;
+            $cart->product_id = $id;
+            $cart->user_id = auth()->id();
             $cart->save();
         }
 
@@ -115,7 +132,7 @@ class MainController extends Controller
                 $cart->qty = $cartItem;
                 $cart->save();
             } else {
-                return back()->with('msg','Low on stock, Please order later!');
+                return back()->with('msg', 'Low on stock, Please order later!');
             }
         }
         return back();

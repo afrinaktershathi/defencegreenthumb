@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('transaction_id')->default(uniqid());
             $table->string('name')->nullable();
+            $table->timestamp('prefer_date')->nullable();
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('status')->nullable();

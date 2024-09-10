@@ -77,13 +77,19 @@
                 <form action="{{ url('/pay') }}" method="POST" class="needs-validation">
                     <input type="hidden" value="{{ csrf_token() }}" name="_token" />
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label for="firstName">Full name</label>
                             <input type="text" name="customer_name" class="form-control" id="customer_name"
                                 placeholder="" value="{{ auth()->user()->name }}" required>
                             <div class="invalid-feedback">
                                 Valid customer name is required.
                             </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName">Prefered Delivery Date (optional)</label>
+                            <input type="datetime-local" name="prefer_date" class="form-control" id="customer_name"
+                                placeholder=""  required>
+                            
                         </div>
                     </div>
 
