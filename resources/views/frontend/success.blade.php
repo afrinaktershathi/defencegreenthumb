@@ -8,7 +8,7 @@
                 class="w-75 m-auto d-block">
             <h2 class="text-center">Payment Successful</h2>
             <p class="text-center mt-1 mb-3">We will contact you soon....</p>
-            <a href="{{ route('order.invoice.download', request()->id) }}"
+            <a href="{{ route('order.invoice.download', $id) }}"
                 class="btn btn-success rounded-0 p-3 mb-3">Download Invoice</a>
         </div>
 

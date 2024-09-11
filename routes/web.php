@@ -24,8 +24,8 @@ Route::get('/cart-details', [MainController::class, 'cartDetails'])->name('cart.
 Route::put('/cart-details-update', [MainController::class, 'cartDetailsUpdate'])->name('cart.details.update')->middleware('auth');
 Route::get('/cart-details-delete/{id}', [MainController::class, 'cartDetailsDelete'])->name('cart.details.delete')->middleware('auth');
 
-Route::get('/order-success', function () {
-    return view('frontend.success');
+Route::get('/order-success/{id?}', function ($id) {
+    return view('frontend.success', compact('id'));
 })->name('order.success');
 Route::post('/user-update/{id}', [UserController::class, 'updateUser'])->name('user.profile.update');
 
