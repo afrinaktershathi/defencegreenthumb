@@ -681,14 +681,13 @@ class SslCommerzPaymentController extends Controller
         $update_product = DB::table('orders')
           ->where('transaction_id', $tran_id)
           ->update(['status' => 'Processing']);
-        return view('frontend.success');
-        echo "<br >Transaction is successfully Completed";
+        return redirect(route('order.success', $order_details->id));
       }
     } else if ($order_details->status == 'Processing' || $order_details->status == 'Complete') {
       if ($authUser) {
         Auth::login($authUser);
       }
-      // return to_route('order.success', ['id' => $order_details->id]);
+
       return redirect(route('order.success', $order_details->id));
 
       /*
