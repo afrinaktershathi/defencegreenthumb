@@ -554,7 +554,7 @@ class SslCommerzPaymentController extends Controller
     # In "orders" table, order unique identity is "transaction_id". "status" field contain status of the transaction, "amount" is the order amount to be paid and "currency" is for storing Site Currency which will be checked with paid currency.
 
     $post_data = array();
-    $post_data['total_amount'] = $request->amount; # You cant not pay less than 10
+    $post_data['total_amount'] = $request->amount; # You can not pay less than 10
     $post_data['currency'] = "BDT";
     $post_data['tran_id'] = uniqid(); // tran_id must be unique
 
@@ -592,6 +592,7 @@ class SslCommerzPaymentController extends Controller
 
     #Before  going to initiate the payment order status need to insert or update as Pending.
     $cartQuantity = Cart::where('user_id', auth()->id())->sum('qty');
+    
     #Before  going to initiate the payment order status need to update as Pending.
     $update_product = Order::updateOrCreate(
       [

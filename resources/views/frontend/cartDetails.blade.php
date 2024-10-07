@@ -7,16 +7,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
         <form action="{{ route('cart.details.update') }}" method="post">
             @csrf
             @method('put')
@@ -102,6 +92,9 @@
                     <button class="border-0 btn btn-primary" style="background: #7C9087;">Update</button>
                     <a href="{{ route('checkout') }}" style="background: #7C9087;"
                         class="border-0 btn btn-primary">Checkout</a>
+                        <!-- update part for COD -->
+                        <a href="{{ route('checkoutCodView') }}" style="background: #7C9087;"
+                        class="border-0 btn btn-primary">Cash on Delivery</a>
                 </div>
             </div>
         </form>

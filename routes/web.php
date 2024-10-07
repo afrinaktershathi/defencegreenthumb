@@ -40,4 +40,8 @@ Route::get('/deliver-orders-confirm/{id}', [OrderController::class, 'deliveryCon
 Route::get('/send-otp/{phone}', [OrderController::class, 'sendOtp'])->name('order.delivery.otp');
 Route::get('/mark-delivered/{id}', [OrderController::class, 'markAsDelivered'])->name('order.delivery.mark');
 Route::get('/download-invoice/{id}', [OrderController::class, 'downloadInvoice'])->name('order.invoice.download');
+
+Route::get('/checkout-cod', [OrderController::class, 'codView'])->name('checkoutCodView');
+Route::post('/checkout-cod', [OrderController::class, 'cod'])->name('checkoutCod');
+
 Auth::routes();

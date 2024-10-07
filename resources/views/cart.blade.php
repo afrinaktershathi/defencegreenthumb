@@ -77,6 +77,7 @@
                     <div class="text-end">
                         <button class="btn rounded-0 text-dark" style="font-weight: 600">Update Cart</button>
                         <a class="btn rounded-0 text-dark" style="font-weight: 600" href="{{ route('checkout.view') }}">Proceed to Checkout</a>
+                        
                     </div>
                     @endif
                 </form>
