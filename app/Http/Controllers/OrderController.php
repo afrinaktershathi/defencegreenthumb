@@ -632,10 +632,9 @@ class OrderController extends Controller
     
         return view('frontend.cashOnDelivery',compact('cartDetails','discrticts'));
     }
+
     function cod(Request $request)
     {
-        //* status  = 0
-        // dd($request->all());
         $cartQuantity = Cart::where('user_id', auth()->id())->sum('qty');
 
         $order = new Order;
@@ -658,11 +657,5 @@ class OrderController extends Controller
         $order->save();
 
         echo "done";
-
-
-
-
-
-
     }
 }
