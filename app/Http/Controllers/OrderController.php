@@ -656,6 +656,6 @@ class OrderController extends Controller
 
         $order->save();
 
-        echo "done";
+        return redirect(route('order.success',$order->id));
     }
 }
