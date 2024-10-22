@@ -653,6 +653,7 @@ class OrderController extends Controller
     $order->user_id = auth()->id();
     $order->qty = $cartQuantity;
     $order->currency = "BDT";
+    $order->status = "Processing";
     $order->payment = "cod";
     $order->total_price = $request->amount;
     $order->save();
