@@ -592,7 +592,7 @@ class SslCommerzPaymentController extends Controller
 
     #Before  going to initiate the payment order status need to insert or update as Pending.
     $cartQuantity = Cart::where('user_id', auth()->id())->sum('qty');
-    
+
     #Before  going to initiate the payment order status need to update as Pending.
     $update_product = Order::updateOrCreate(
       [
@@ -626,6 +626,8 @@ class SslCommerzPaymentController extends Controller
         $orderItem->qty = $item->qty;
         $orderItem->price = $item->products->price;
         $orderItem->save();
+
+        Stock::where('product_id', $orderItem->product_id)->decrement('stock', $orderItem->qty);
       }
     }
     $sslc = new SslCommerzNotification();
